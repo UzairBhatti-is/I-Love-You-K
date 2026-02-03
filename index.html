@@ -2,35 +2,34 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Hey K 💖</title>
+<title>For K ❤️</title>
+
 <style>
     body {
         margin: 0;
         height: 100vh;
+        background: linear-gradient(135deg, #ff9a9e, #fad0c4);
         display: flex;
         justify-content: center;
         align-items: center;
-        background: linear-gradient(135deg, #ffafbd, #ffc3a0);
-        font-family: 'Arial', sans-serif;
+        font-family: Arial, sans-serif;
         overflow: hidden;
         text-align: center;
+        color: white;
     }
 
     h1 {
         font-size: 3.5rem;
-        color: #fff;
         margin-bottom: 10px;
     }
 
     .farsi {
         font-size: 1.8rem;
-        color: #fff;
         margin-top: 10px;
     }
 
     .translation {
         font-size: 1.2rem;
-        color: #fff;
         opacity: 0.9;
         margin-bottom: 30px;
     }
@@ -38,11 +37,10 @@
     .buttons {
         position: relative;
         margin-top: 30px;
+        height: 150px;
     }
 
     button {
-        font-size: 2rem;
-        padding: 15px 40px;
         border: none;
         border-radius: 50px;
         cursor: pointer;
@@ -50,6 +48,8 @@
     }
 
     #yes {
+        font-size: 2rem;
+        padding: 15px 40px;
         background: #ff4d6d;
         color: white;
         left: 50%;
@@ -57,7 +57,9 @@
     }
 
     #no {
-        background: #fff;
+        font-size: 1.2rem;
+        padding: 10px 25px;
+        background: white;
         color: #ff4d6d;
         top: 80px;
         left: 50%;
@@ -70,19 +72,37 @@
         left: 0;
         pointer-events: none;
     }
+
+    .heart {
+        position: absolute;
+        font-size: 2rem;
+        animation: floatUp 2s ease-out forwards;
+    }
+
+    @keyframes floatUp {
+        from {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+        to {
+            opacity: 0;
+            transform: translateY(-200px) scale(1.5);
+        }
+    }
 </style>
 </head>
+
 <body>
 
-<div>
+<div id="content">
     <h1>K, will you be my Valentine? 💘</h1>
 
     <div class="farsi">
-        دلم می‌خواهد تمام عاشقانه‌هایم فقط برای تو باشد
+        وقتی تو را می‌بینم، همه چیز را فراموش می‌کنم
     </div>
 
     <div class="translation">
-        I want all my love stories to be only about you
+        When I see you, I forget everything else
     </div>
 
     <div class="buttons">
@@ -92,6 +112,10 @@
 </div>
 
 <canvas id="confetti"></canvas>
+
+<audio id="sound">
+    <source src="https://assets.mixkit.co/sfx/preview/mixkit-achievement-bell-600.mp3" type="audio/mpeg">
+</audio>
 
 <script>
     const noBtn = document.getElementById("no");
@@ -106,6 +130,7 @@
     const yesBtn = document.getElementById("yes");
     const canvas = document.getElementById("confetti");
     const ctx = canvas.getContext("2d");
+    const sound = document.getElementById("sound");
 
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
@@ -113,12 +138,13 @@
     let confetti = [];
 
     function createConfetti() {
+        confetti = [];
         for (let i = 0; i < 300; i++) {
             confetti.push({
                 x: Math.random() * canvas.width,
                 y: Math.random() * canvas.height - canvas.height,
                 r: Math.random() * 6 + 2,
-                d: Math.random() * 10 + 5,
+                d: Math.random() * 8 + 4,
                 color: `hsl(${Math.random() * 360}, 100%, 50%)`
             });
         }
@@ -132,17 +158,36 @@
             ctx.fillStyle = c.color;
             ctx.fill();
             c.y += c.d;
-            if (c.y > canvas.height) {
-                c.y = -10;
-            }
+            if (c.y > canvas.height) c.y = -10;
         });
         requestAnimationFrame(drawConfetti);
     }
 
+    function heartExplosion() {
+        for (let i = 0; i < 20; i++) {
+            const heart = document.createElement("div");
+            heart.className = "heart";
+            heart.innerHTML = "❤️";
+            heart.style.left = Math.random() * window.innerWidth + "px";
+            heart.style.top = Math.random() * window.innerHeight + "px";
+            document.body.appendChild(heart);
+            setTimeout(() => heart.remove(), 2000);
+        }
+    }
+
     yesBtn.addEventListener("click", () => {
+        sound.play();
         createConfetti();
         drawConfetti();
-        yesBtn.innerText = "YAYYY 💕";
+        heartExplosion();
+
+        document.getElementById("content").innerHTML = `
+            <h1 style="font-size:3.8rem;">K said YES 😭❤️</h1>
+            <p style="font-size:1.8rem;">
+                You just made me ridiculously happy.<br>
+                Valentine secured 💍✨
+            </p>
+        `;
     });
 </script>
 
